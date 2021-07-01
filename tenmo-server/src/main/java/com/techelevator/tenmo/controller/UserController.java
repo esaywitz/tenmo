@@ -20,10 +20,11 @@ public class UserController {
     AccountDao accountDao;
     TransferDao transferDao;
 
-    public UserController() {
+    public UserController() {gi
         accountDao = new JdbcAccountDao();
         transferDao = new JdbcTransferDao();
     }
+
 
     @ResponseStatus(HttpStatus.OK)
     //shouldn't it be /users if that would return a list of all users?
