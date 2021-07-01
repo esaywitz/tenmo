@@ -20,7 +20,7 @@ public class UserController {
     AccountDao accountDao;
     TransferDao transferDao;
 
-    public UserController() {gi
+    public UserController() {
         accountDao = new JdbcAccountDao();
         transferDao = new JdbcTransferDao();
     }
@@ -28,26 +28,26 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     //shouldn't it be /users if that would return a list of all users?
-    @RequestMapping(path = "/user/{id}/account" , method = RequestMethod.GET)
+    @RequestMapping(path = "/users/{id}/account" , method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable Long id){
         return accountDao.getBalance(id);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/user/{id}/account", method = RequestMethod.PUT)
+    @RequestMapping(path = "/users/{id}/account", method = RequestMethod.PUT)
     public void updateBalance(@PathVariable Long id, @RequestParam @Valid BigDecimal balance){
         accountDao.updateAccount(id, balance);
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(path = "/user/{id}/account/{accountId}/transfers", method = RequestMethod.GET)
+    @RequestMapping(path = "/users/{id}/account/{accountId}/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers(@PathVariable Long id, @PathVariable Long accountId){
         return transferDao.getAll(id);
     }
 
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/user/{id}/account/{accountFrom}/transfers", method = RequestMethod.POST)
+    @RequestMapping(path = "/users/{id}/account/{accountFrom}/transfers", method = RequestMethod.POST)
     public boolean create(@PathVariable Long id, @PathVariable Long accountFrom,
         @RequestParam Long accountTo, @RequestParam BigDecimal amount){
         return transferDao.create(amount, accountFrom, accountTo);
