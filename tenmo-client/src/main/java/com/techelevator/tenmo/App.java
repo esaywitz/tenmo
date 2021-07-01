@@ -84,6 +84,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 	private void sendBucks() {
 		// TODO Auto-generated method stub
+		//POST to create a new transfer
+		//GET to see balance of FROM account
+		//PUT to update TO account
 		
 	}
 
