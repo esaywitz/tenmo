@@ -41,11 +41,11 @@ public class UserController {
     public User findByUsername(@PathVariable @Valid String username){
        return userDao.findByUsername(username);
     }
-    @RequestMapping(path = "/user/{username}", method = RequestMethod.GET)
+    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
     public int findIdByUsername(@PathVariable @Valid String username){
         return userDao.findIdByUsername(username);
     }
-    @RequestMapping(path = "/user", method = RequestMethod.POST)
+    @RequestMapping(path = "/users", method = RequestMethod.POST)
     public boolean create(@RequestParam @Valid String username, @RequestParam @Valid String password){
         return userDao.create(username, password);
     }
