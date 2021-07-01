@@ -6,23 +6,24 @@ import com.techelevator.tenmo.dao.JdbcAccountDao;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 
 @RestController
-public class AccountController {
+public class UserController {
     AccountDao accountDao;
 
-    public AccountController() {
+    public UserController() {
         accountDao = new JdbcAccountDao();
     }
 
     @RequestMapping(path = "/user/{id}/account" , method = RequestMethod.GET)
-    public double getBalance(@PathVariable Long id){
+    public BigDecimal getBalance(@PathVariable Long id){
         return accountDao.getBalance(id);
     }
 
     @RequestMapping(path = "/user/{id}/account", method = RequestMethod.PUT)
-    public double updateBalance(@PathVariable Long id, @RequestParam @Valid double balance){
-        return accountDao.updateAccount(id, balance);
+    public void updateBalance(@PathVariable Long id, @RequestParam @Valid BigDecimal balance){
+        accountDao.updateAccount(id, balance);
     }
 
 

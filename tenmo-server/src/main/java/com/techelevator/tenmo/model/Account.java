@@ -1,29 +1,30 @@
 package com.techelevator.tenmo.model;
 
 import javax.validation.constraints.Positive;
+import java.math.BigDecimal;
 
 public class Account {
 
 
-    private long id;
+    private long AccountId;
     private long user_id;
     @Positive
-    private double balance;
+    private BigDecimal balance;
 
     public Account(){
 
     }
-    public Account(Long id, long user_id, double balance){
-        this.id = id;
+    public Account(Long id, long user_id, BigDecimal balance){
+        this.AccountId = id;
         this.user_id = user_id;
         this.balance = balance;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
@@ -36,10 +37,10 @@ public class Account {
     }
 
     public long getId() {
-        return id;
+        return AccountId;
     }
 
     public void setId(long id) {
-        this.id = id;
+        this.AccountId = id;
     }
 }
