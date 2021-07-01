@@ -37,6 +37,7 @@ public class UserController {
     public List<User> findAll(){
         return userDao.findAll();
     }
+
     @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
     public User findByUsername(@PathVariable @Valid String username){
        return userDao.findByUsername(username);
