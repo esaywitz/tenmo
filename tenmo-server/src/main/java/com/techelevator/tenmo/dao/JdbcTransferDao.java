@@ -13,11 +13,9 @@ public class JdbcTransferDao implements TransferDao{
 
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcTransferDao(JdbcTemplate jdbcTemplate){
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
-    public List<Transfer> getAll(int userID){
+
+    public List<Transfer> getAll(Long userID){
         List<Transfer> allTransfers = new ArrayList<>();
 
         //join transfer, account and user tables
@@ -33,7 +31,7 @@ public class JdbcTransferDao implements TransferDao{
         return allTransfers;
     }
 
-    public boolean create(BigDecimal amount, int userIDTo, int userIDFrom){
+    public boolean create(BigDecimal amount, Long userIDTo, Long userIDFrom){
         boolean created = false;
         //this is probably insufficient, needs an additional statement to map userID
 

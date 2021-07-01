@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TransferDao {
 
-    List<Transfer> getAll(int userAccount);
+    List<Transfer> getAll(Long userId);
 
-    boolean create(BigDecimal amount, int userIDTo, int userIDFrom);
+    boolean create(BigDecimal amount, Long userIDTo, Long userIDFrom);
 
 
 }

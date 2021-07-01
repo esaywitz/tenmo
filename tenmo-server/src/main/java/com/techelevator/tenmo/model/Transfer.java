@@ -27,7 +27,7 @@ public class Transfer {
     public Transfer(){
 
     }
-    
+
 
     public Transfer(BigDecimal amount, int accountTo, int accountFrom){
         this.amount = amount;
