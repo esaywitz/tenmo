@@ -47,8 +47,8 @@ public class UserController {
     
 
     @RequestMapping(path = "/users", method = RequestMethod.POST)
-    public boolean create(@RequestParam @Valid String username, @RequestParam @Valid String password){
-        return userDao.create(username, password);
+    public boolean create(@RequestBody @Valid User user){
+        return userDao.create(user.getUsername(), user.getPassword());
     }
 
 
