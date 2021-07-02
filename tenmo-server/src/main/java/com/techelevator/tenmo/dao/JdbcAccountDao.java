@@ -10,22 +10,26 @@ import java.math.BigDecimal;
 public class JdbcAccountDao implements AccountDao{
 
     private JdbcTemplate jdbcTemplate;
+
+    public JdbcAccountDao(JdbcTemplate jdbcTemplate){
+        this.jdbcTemplate=jdbcTemplate;
+
+    }
     @Override
-    public BigDecimal getBalance(Long id){
+    public BigDecimal getBalance(long id){
         String sql = "select balance from accounts where user_id=?;";
-        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, id);
-        BigDecimal amount = result.getBigDecimal("balance");
-        return amount;
+        BigDecimal amout = jdbcTemplate.queryForObject(sql, BigDecimal.class, id);
+        return amout;
     }
 
 
 
     @Override
-    public void updateAccount(Long userId, BigDecimal amount){
-        String sql = "update accounts"+
+    public void updateAccount(long userId, BigDecimal amount){
+        String sql = "update accounts "+
                      "set balance = balance + ? "+
                      "where user_id = ?;";
-        jdbcTemplate.update(sql, amount,userId );
+        jdbcTemplate.update(sql, amount,userId);
 
 
     }

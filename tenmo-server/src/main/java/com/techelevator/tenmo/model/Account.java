@@ -14,7 +14,7 @@ public class Account {
     public Account(){
 
     }
-    public Account(Long id, long user_id, BigDecimal balance){
+    public Account(long  id, long user_id, BigDecimal balance){
         this.AccountId = id;
         this.user_id = user_id;
         this.balance = balance;
@@ -40,7 +40,7 @@ public class Account {
         return AccountId;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.AccountId = id;
     }
 }
