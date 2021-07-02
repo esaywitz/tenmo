@@ -1,12 +1,11 @@
 package com.techelevator.tenmo.controller;
 
 
-import com.techelevator.tenmo.dao.AccountDao;
-import com.techelevator.tenmo.dao.JdbcAccountDao;
-import com.techelevator.tenmo.dao.JdbcTransferDao;
-import com.techelevator.tenmo.dao.TransferDao;
+import com.techelevator.tenmo.dao.*;
 import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +18,8 @@ import java.util.List;
 public class UserController {
     AccountDao accountDao;
     TransferDao transferDao;
+    UserDao userDao;
+
 
     public UserController() {
         accountDao = new JdbcAccountDao();
@@ -26,8 +27,32 @@ public class UserController {
     }
 
 
+
+    @RequestMapping (path = "/users", method= RequestMethod.GET)
+    public List<User> findAll(){
+        return userDao.findAll();
+    }
+
+    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
+    public User findByUsername(@PathVariable @Valid String username){
+        return userDao.findByUsername(username);
+    }
+
+    //same path and methods, won't compile
+//    @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
+//    public int findIdByUsername(@PathVariable @Valid String username){
+//        return userDao.findIdByUsername(username);
+//    }
+
+    //isn't the /register endpoint the one that should be creating users?
+    //shouldn't we be using a User object to create the record?
+    @RequestMapping(path = "/users", method = RequestMethod.POST)
+    public boolean create(@RequestBody String username, @RequestBody String password){
+        return userDao.create(username, password);
+    }
+
+
     @ResponseStatus(HttpStatus.OK)
-    //shouldn't it be /users if that would return a list of all users?
     @RequestMapping(path = "/users/{id}/account" , method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable Long id){
         return accountDao.getBalance(id);
