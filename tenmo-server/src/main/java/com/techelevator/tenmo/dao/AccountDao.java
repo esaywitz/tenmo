@@ -1,0 +1,10 @@
+package com.techelevator.tenmo.dao;
+
+import java.math.BigDecimal;
+
+public interface AccountDao {
+
+    BigDecimal getBalance(long id);
+
+    void updateAccount(long id, BigDecimal amount);
+}
