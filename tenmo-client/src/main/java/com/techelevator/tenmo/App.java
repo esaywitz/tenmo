@@ -9,6 +9,7 @@ import com.techelevator.view.ConsoleService;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Scanner;
 
 public class App {
 
@@ -74,7 +75,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		}
 	}
 
-	private void viewCurrentBalance() {
+	private BigDecimal viewCurrentBalance() {
 		int userId = currentUser.getUser().getId();
 		System.out.println("Your userid: " + userId);
 		Long id = Long.valueOf(userId);
@@ -83,7 +84,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		NumberFormat formatter = NumberFormat.getCurrencyInstance();
 		String money = formatter.format(balance);
 		System.out.println("Your balance is: " + money);
-		
+		return balance;
 	}
 
 	private void viewTransferHistory() {
@@ -112,11 +113,43 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		//POST to create a new transfer
+		// display list of all users and their ids
+		User[] users = accountService.getAllUsers();
+		System.out.println("List of users to send $$ to:");
+		for (User user : users){
+			System.out.println("Username: " + user.getUsername() + ", UserId: " + user.getId());
+			System.out.println("*************************************************************");
+		}
 
-		//GET to see balance of FROM account
-		//PUT to update TO and FROM accounts
+		// select a user id to send TO
+		System.out.println("Enter the User Id of your recipient.");
+		Scanner scanner = new Scanner(System.in);
+		Integer userIdToSendTo = Integer.parseInt(scanner.nextLine());
+		// collect amount of the transfer.
+		System.out.println("Enter the amount of the transfer.");
+		BigDecimal amountToSend = new BigDecimal(scanner.nextLine());
+		// check to see if current balance is enough to cover amount
+		// if not, ask them to add more money in their account or just tell them
+		// they can't complete their request at this time and return to main menu.
+		if (amountToSend.compareTo(viewCurrentBalance()) == 1){
+			System.out.println("You do not have enough funds to complete this transaction.");
+			mainMenu();
+		}
+		// POST request to create the transfer
+		int userId = currentUser.getUser().getId();
+		Long id = Long.valueOf(userId);
+		Account userAccount = accountService.getAccount(id);
+		Long accountId = userAccount.getAccountId();
+		Long recipientId = Long.valueOf(userIdToSendTo);
+		Account recipientAccount = accountService.getAccount(recipientId);
+		Long recipientAccountId = recipientAccount.getAccountId();
+		Transfer transfer = new Transfer(amountToSend, accountId, recipientAccountId);
+		Long createdTransferID = accountService.createTransfer(transfer);
+		System.out.println("Success! Your Transaction ID is: " + createdTransferID);
+		// PUT method to update account from balance
+		
+		// PUT method to update from account balance
+
 		
 	}
 

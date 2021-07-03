@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class Transfer {
-    private Long id;
+    private Long transferID;
 
     //@NotEmpty(message = "Transfer amount cannot be null.")
     //@Positive(message = "Transfer amount must be 1 or greater.")
@@ -69,11 +69,11 @@ public class Transfer {
     }
 
     public Long getId() {
-        return id;
+        return transferID;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(Long transferID) {
+        this.transferID = transferID;
     }
 
     public int getType() {

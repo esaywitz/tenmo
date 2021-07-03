@@ -63,7 +63,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
-    public boolean create(@RequestBody @Valid Transfer transfer){
+    public Long create(@RequestBody @Valid Transfer transfer){
         return transferDao.create(transfer.getAmount(), transfer.getAccountTo(), transfer.getAccountFrom());
     } 
 

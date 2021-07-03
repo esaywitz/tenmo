@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.LongBinaryOperator;
 
 @Component
 public class JdbcTransferDao implements TransferDao{
@@ -30,7 +31,6 @@ public class JdbcTransferDao implements TransferDao{
             return allTransfers;
         }
 
-        //join transfer, account and user tables
         String sql = "SELECT transfer_id, account_from, account_to, amount " +
                 "FROM transfers " +
                 "WHERE account_from = ? OR account_to=?;";
@@ -43,23 +43,20 @@ public class JdbcTransferDao implements TransferDao{
 
 
     @Override
-    public boolean create(BigDecimal amount, Long userIDTo, Long userIDFrom){
-        boolean created = false;
-        //this is probably insufficient, needs an additional statement to map userID
+    public Long create(BigDecimal amount, Long userIDTo, Long userIDFrom){
+        Long transferID = null;
 
         String sql = "INSERT INTO transfers (amount, account_to, account_from, transfer_type_id, transfer_status_id) " +
-                "VALUES (?,?,?,?,?); ";
+                "VALUES (?,?,?,?,?) RETURNING transfer_id; ";
 
         try {
-
-            jdbcTemplate.update(sql, amount, userIDTo, userIDFrom, 2, 2);
-
-           created = true;
+            int transferId = jdbcTemplate.queryForObject(sql, Integer.class, amount, userIDTo, userIDFrom, 2, 2);
+            transferID = Long.valueOf(transferId);
         }
         catch (DataAccessException e){
-            created = false;
+            System.out.println(e.getCause() + ": " + e.getLocalizedMessage());
         }
-        return created;
+        return transferID;
     }
 
     private Transfer mapRowToTransfer(SqlRowSet results) {

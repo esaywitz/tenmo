@@ -8,6 +8,7 @@ import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
-    private final String BASE_URL = "http://localhost:8080/";
+    private final String BASE_URL = "http://localhost:8080";
     public String AUTH_TOKEN = "";
     private final RestTemplate restTemplate;
 
@@ -63,6 +64,37 @@ public class AccountService {
 
     }
 
+    public User[] getAllUsers(){
+        User[] users = null;
+        try{
+            users = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, makeAuthEntity(),
+                    User[].class).getBody();
+        } catch (RestClientResponseException e){
+            System.out.println(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
+        }
+        return users;
+    }
+
+    public Long createTransfer(Transfer transfer){
+        Long transferID = null;
+        try{
+           transferID = restTemplate.postForObject(BASE_URL + "transfers", makeTransferEntity(transfer), Long.class);
+        }
+        catch(RestClientResponseException e){
+            System.out.println(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
+        }
+        return transferID;
+    }
+
+    //this is used for any PUT or POST requests
+    private HttpEntity<Transfer> makeTransferEntity(Transfer transfer){
+        HttpHeaders headers = new HttpHeaders();
+        AUTH_TOKEN = App.getCurrentUser().getToken();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(AUTH_TOKEN);
+        HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+        return entity;
+    }
 
 
 
