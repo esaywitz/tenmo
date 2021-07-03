@@ -5,8 +5,9 @@ import java.math.BigDecimal;
 
 public class Account {
 
-
-    private long AccountId;
+    @Positive
+    private long accountId;
+    @Positive
     private long user_id;
     @Positive
     private BigDecimal balance;
@@ -15,7 +16,7 @@ public class Account {
 
     }
     public Account(long  id, long user_id, BigDecimal balance){
-        this.AccountId = id;
+        this.accountId = id;
         this.user_id = user_id;
         this.balance = balance;
     }
@@ -36,11 +37,11 @@ public class Account {
         this.user_id = user_id;
     }
 
-    public long getId() {
-        return AccountId;
+    public long getAccountId() {
+        return accountId;
     }
 
     public void setId(int id) {
-        this.AccountId = id;
+        this.accountId = id;
     }
 }
