@@ -122,7 +122,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		}
 
 		// select a user id to send TO
-		System.out.println("Enter the User Id of your recipient.");
+		System.out.println("Enter the UserId of your recipient.");
 		Scanner scanner = new Scanner(System.in);
 		Integer userIdToSendTo = Integer.parseInt(scanner.nextLine());
 		// collect amount of the transfer.
@@ -146,8 +146,10 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		Transfer transfer = new Transfer(amountToSend, accountId, recipientAccountId);
 		Long createdTransferID = accountService.createTransfer(transfer);
 		System.out.println("Success! Your Transaction ID is: " + createdTransferID);
-		// PUT method to update account from balance
-		
+		// PUT method to update recipient account balance
+		accountService.updateBalance(recipientId, amountToSend);
+		System.out.println(recipientAccount.getBalance());
+
 		// PUT method to update from account balance
 
 		

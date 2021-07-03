@@ -86,7 +86,16 @@ public class AccountService {
         return transferID;
     }
 
-    //this is used for any PUT or POST requests
+    public void updateBalance(Long userId, BigDecimal amount){
+        try{
+            restTemplate.exchange(BASE_URL + "/users/" + userId + "/accounts", HttpMethod.PUT, makeBalanceEntity(amount), BigDecimal.class);
+        }
+        catch (RestClientResponseException e){
+            System.out.println(e.getRawStatusCode() + " : " + e.getCause());
+        }
+    }
+
+    //this is used for any POST requests
     private HttpEntity<Transfer> makeTransferEntity(Transfer transfer){
         HttpHeaders headers = new HttpHeaders();
         AUTH_TOKEN = App.getCurrentUser().getToken();
@@ -96,6 +105,15 @@ public class AccountService {
         return entity;
     }
 
+    //used for PUT requests to update balance
+    private HttpEntity<BigDecimal> makeBalanceEntity(BigDecimal amount){
+        HttpHeaders headers = new HttpHeaders();
+        AUTH_TOKEN = App.getCurrentUser().getToken();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(AUTH_TOKEN);
+        HttpEntity<BigDecimal> entity = new HttpEntity<>(amount, headers);
+        return entity;
+    }
 
 
     private HttpEntity makeAuthEntity(){
