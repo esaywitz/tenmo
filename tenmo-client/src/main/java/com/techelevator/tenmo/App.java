@@ -2,6 +2,7 @@ package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -28,6 +29,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private ConsoleService console;
     private AuthenticationService authenticationService;
     private AccountService accountService;
+    private String theUsername;
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService());
@@ -78,7 +80,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-    	accountService.getAll();
+
+		User user = accountService.getUser(theUsername);
+		Long id = Long.valueOf(user.getId());
+		Account account = accountService.getAccount(id);
+    	accountService.getAll(account.getAccountId());
 	}
 
 	//optional
@@ -110,7 +116,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		while(!isAuthenticated()) {
 			String choice = (String)console.getChoiceFromOptions(LOGIN_MENU_OPTIONS);
 			if (LOGIN_MENU_OPTION_LOGIN.equals(choice)) {
-				login();
+				theUsername = login();
 			} else if (LOGIN_MENU_OPTION_REGISTER.equals(choice)) {
 				register();
 			} else {
@@ -141,7 +147,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
         }
 	}
 
-	private void login() {
+	private String login() {
 		System.out.println("Please log in");
 		currentUser = null;
 		while (currentUser == null) //will keep looping until user is logged in
@@ -149,11 +155,14 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			UserCredentials credentials = collectUserCredentials();
 		    try {
 				currentUser = authenticationService.login(credentials);
+				return currentUser.getUser().getUsername();
 			} catch (AuthenticationServiceException e) {
 				System.out.println("LOGIN ERROR: "+e.getMessage());
 				System.out.println("Please attempt to login again.");
 			}
 		}
+		//should never get here
+		return null;
 	}
 	
 	private UserCredentials collectUserCredentials() {
