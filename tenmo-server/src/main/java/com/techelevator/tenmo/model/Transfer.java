@@ -2,21 +2,22 @@ package com.techelevator.tenmo.model;
 
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class Transfer {
     private Long id;
 
-    @NotEmpty(message = "Transfer amount cannot be null.")
-    @Size(min=1, message = "Transfer amount must be 1 or greater.")
+    //@NotEmpty(message = "Transfer amount cannot be null.")
+    //@Positive(message = "Transfer amount must be 1 or greater.")
     private BigDecimal amount;
 
-    @NotEmpty(message = "Transfer to account cannot be null.")
-    private int accountTo;
+    @Positive(message = "Transfer to account cannot be negative.")
+    private long accountTo;
 
-    @NotEmpty(message = "Transfer from account cannot be null.")
-    private int accountFrom;
+    @Positive(message = "Transfer from account cannot be negative.")
+    private long accountFrom;
 
     //should we set status/type to the id or the description?
     //idea is to set the defaults and any changes can be handled in the
@@ -43,7 +44,7 @@ public class Transfer {
         this.amount = amount;
     }
 
-    public int getAccountTo() {
+    public long getAccountTo() {
         return accountTo;
     }
 
@@ -51,7 +52,7 @@ public class Transfer {
         this.accountTo = accountTo;
     }
 
-    public int getAccountFrom() {
+    public long getAccountFrom() {
         return accountFrom;
     }
 

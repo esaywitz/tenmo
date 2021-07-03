@@ -2,6 +2,7 @@ package com.techelevator.tenmo.controller;
 
 
 import com.techelevator.tenmo.dao.*;
+import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
@@ -54,18 +55,17 @@ public class UserController {
 
 
     @ResponseStatus(HttpStatus.OK)
-    @RequestMapping(path = "/users/{id}/account/{accountId}/transfers", method = RequestMethod.GET)
-    public List<Transfer> getAllTransfers(@PathVariable Long id, @PathVariable Long accountId){
-        return transferDao.getAll(id);
+    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    public List<Transfer> getAllTransfers(@RequestParam @Valid Long accountId){
+        return transferDao.getAll(accountId);
     }
 
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/users/{id}/account/{accountFrom}/transfers", method = RequestMethod.POST)
-    public boolean create(@PathVariable Long id, @PathVariable Long accountFrom,
-        @RequestParam Long accountTo, @RequestParam BigDecimal amount){
-        return transferDao.create(amount, accountFrom, accountTo);
-    }
+    @RequestMapping(path = "/transfers", method = RequestMethod.POST)
+    public boolean create(@RequestBody @Valid Transfer transfer){
+        return transferDao.create(transfer.getAmount(), transfer.getAccountTo(), transfer.getAccountFrom());
+    } 
 
 
 
