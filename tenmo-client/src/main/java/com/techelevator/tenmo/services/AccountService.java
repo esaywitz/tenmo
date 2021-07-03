@@ -1,6 +1,8 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.App;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpEntity;
@@ -9,17 +11,19 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
     private final String BASE_URL = "http://localhost:8080/";
-    public static String AUTH_TOKEN = "";
+    public String AUTH_TOKEN = "";
     private final RestTemplate restTemplate;
 
 
     public AccountService(){
         restTemplate = new RestTemplate();
+
     }
 
     public Transfer[] getAll(Long accountId){
@@ -33,17 +37,19 @@ public class AccountService {
         }
         return transfers;
     }
+
     public Account getAccount(Long userId){
         Account account = null;
         try {
 
-            account = restTemplate.exchange(BASE_URL + "/users/"+ userId+"/accounts", HttpMethod.GET,
+            account = restTemplate.exchange(BASE_URL + "/users/"+ userId+"/accounts" , HttpMethod.GET,
                     makeAuthEntity(), Account.class).getBody();
         } catch (RestClientResponseException e){
             System.out.println(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
         }
         return account;
     }
+
     public User getUser(String username){
         User user = null;
         try {
@@ -59,8 +65,10 @@ public class AccountService {
 
 
 
+
     private HttpEntity makeAuthEntity(){
         HttpHeaders headers = new HttpHeaders();
+        AUTH_TOKEN = App.getCurrentUser().getToken();
         headers.setBearerAuth(AUTH_TOKEN);
         HttpEntity entity = new HttpEntity<>(headers);
         return entity;

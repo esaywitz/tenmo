@@ -6,6 +6,7 @@ public class Transfer {
     private BigDecimal amount;
     //relates to UserIDs, not accountIDs
     private Long accountFrom;
+    private Long accountTo;
     private Long accountId;
 
     public BigDecimal getAmount() {
@@ -32,6 +33,11 @@ public class Transfer {
         this.accountId = accountId;
     }
 
+    public Long getAccountTo() {
+        return accountTo;
+    }
 
-
+    public void setAccountTo(Long accountTo) {
+        this.accountTo = accountTo;
+    }
 }
