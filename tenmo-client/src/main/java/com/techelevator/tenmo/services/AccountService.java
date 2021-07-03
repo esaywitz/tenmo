@@ -11,19 +11,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AccountService {
-    private String url = "http:localhost:8080/";
+    private final String BASE_URL = "http:localhost:8080/";
     public static String AUTH_TOKEN = "";
-    private RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
 
-    private AccountService(String url){
-        this.url = url;
+    public AccountService(){
+        restTemplate = new RestTemplate();
     }
 
     public Transfer[] getAll(){
         Transfer[] transfers = null;
         try{
-            transfers = restTemplate.exchange(url + "/user/{id}/account", HttpMethod.GET, makeAuthEntity(),
+            transfers = restTemplate.exchange(BASE_URL + "/transfers", HttpMethod.GET, makeAuthEntity(),
                    Transfer[].class).getBody();
         }
         catch (RestClientResponseException e){

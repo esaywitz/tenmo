@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @RequestMapping(path = "/users/{id}/accounts" , method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable long id){
-        return accountDao.getBalance(id);
+    public Account getBalance(@PathVariable long id){
+        return accountDao.getAccount(id);
     }
 
     @RequestMapping(path = "/users/{id}/accounts", method = RequestMethod.PUT)
