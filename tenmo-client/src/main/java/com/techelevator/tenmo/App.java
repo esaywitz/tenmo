@@ -8,6 +8,8 @@ import com.techelevator.view.ConsoleService;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -93,12 +95,19 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		Long id = Long.valueOf(userId);
 		Account account = accountService.getAccount(id);
 		Transfer[] transfers = accountService.getAll(account.getAccountId());
+
+		//create a list of just transfer ids
+		List<Long> transferIds = new ArrayList<>();
+		for (Transfer transfer : transfers){
+			transferIds.add(transfer.getTransferID());
+		}
 		if (transfers.length == 0){
 			System.out.println("There are no transfers available for this account.");
 		}
 		for (Transfer transfer: transfers){
 			System.out.println("Amount transferred:  " + transfer.getAmount() + "\nFrom account: "
-					+ transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo());
+					+ transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() +"\nTransaction Id: "
+					+ transfer.getTransferID());
 			System.out.println("_________________________________________");
 
 		}
@@ -113,21 +122,33 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 
 	private void sendBucks() {
+		Integer userIdToSendTo = 0;
+		BigDecimal amountToSend = null;
 		// display list of all users and their ids
 		User[] users = accountService.getAllUsers();
+		//create a new list of just all the userIds.
+		List<Integer> userIds = new ArrayList<>();
+		for (User user : users){
+			userIds.add(user.getId());
+		}
 		System.out.println("List of users to send $$ to:");
 		for (User user : users){
 			System.out.println("Username: " + user.getUsername() + ", UserId: " + user.getId());
 			System.out.println("*************************************************************");
 		}
 
-		// select a user id to send TO
-		System.out.println("Enter the UserId of your recipient.");
+		// select a user id to send TO. check first if valid.
+		userIdToSendTo = console.getUserInputInteger("Enter the UserId of your recipient");
 		Scanner scanner = new Scanner(System.in);
-		Integer userIdToSendTo = Integer.parseInt(scanner.nextLine());
-		// collect amount of the transfer.
-		System.out.println("Enter the amount of the transfer.");
-		BigDecimal amountToSend = new BigDecimal(scanner.nextLine());
+		if (!userIds.contains(userIdToSendTo)) {
+			System.out.println("You did not select a valid userid.");
+			mainMenu();
+
+		}
+
+		// collect amount of the transfer. check first if valid.
+		Integer numberEntered = console.getUserInputInteger("Enter the amount of the transfer");
+		amountToSend = new BigDecimal(numberEntered);
 		// check to see if current balance is enough to cover amount
 		// if not, ask them to add more money in their account or just tell them
 		// they can't complete their request at this time and return to main menu.
@@ -135,6 +156,8 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			System.out.println("You do not have enough funds to complete this transaction.");
 			mainMenu();
 		}
+
+
 		// POST request to create the transfer
 		int userId = currentUser.getUser().getId();
 		Long id = Long.valueOf(userId);
@@ -146,6 +169,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		Transfer transfer = new Transfer(amountToSend, accountId, recipientAccountId);
 		Long createdTransferID = accountService.createTransfer(transfer);
 		System.out.println("Success! Your Transaction ID is: " + createdTransferID);
+
 		// PUT method to update recipient account balance
 		accountService.updateBalance(recipientId, amountToSend);
 		System.out.println(recipientAccount.getBalance());
@@ -154,6 +178,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 		
 	}
+
+	private void viewTransactionDetails(Long transferID){
+
+	}
+
 
 	//optional
 	private void requestBucks() {

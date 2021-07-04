@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "/users/{id}/accounts", method = RequestMethod.PUT)
-    public void updateBalance(@PathVariable long id, @RequestParam @Valid BigDecimal amount){
+    public void updateBalance(@PathVariable long id, @RequestBody @Valid BigDecimal amount){
         accountDao.updateAccount(id, amount);
     }
     @RequestMapping (path = "/users", method= RequestMethod.GET)

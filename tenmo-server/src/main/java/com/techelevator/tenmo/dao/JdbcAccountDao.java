@@ -22,8 +22,6 @@ public class JdbcAccountDao implements AccountDao{
         String sql2 = "select balance from accounts where user_id=?;";
         BigDecimal balance = jdbcTemplate.queryForObject(sql2, BigDecimal.class,id);
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
-
-
         results.next();
         Account account = new Account(results.getLong("account_id"), results.getLong("user_id"), balance);
         return account;
@@ -36,7 +34,7 @@ public class JdbcAccountDao implements AccountDao{
         String sql = "update accounts "+
                      "set balance = balance + ? "+
                      "where user_id = ?;";
-        jdbcTemplate.update(sql, amount,userId);
+        jdbcTemplate.update(sql, amount, userId);
 
 
     }

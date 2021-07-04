@@ -65,7 +65,7 @@ public class AccountService {
     }
 
     public User[] getAllUsers(){
-        User[] users = null;
+       User[] users = null;
         try{
             users = restTemplate.exchange(BASE_URL + "/users", HttpMethod.GET, makeAuthEntity(),
                     User[].class).getBody();
@@ -88,10 +88,10 @@ public class AccountService {
 
     public void updateBalance(Long userId, BigDecimal amount){
         try{
-            restTemplate.exchange(BASE_URL + "/users/" + userId + "/accounts", HttpMethod.PUT, makeBalanceEntity(amount), BigDecimal.class);
+            restTemplate.exchange(BASE_URL + "/users/" + userId + "/accounts?amount=" + amount, HttpMethod.PUT, makeBalanceEntity(amount), BigDecimal.class);
         }
         catch (RestClientResponseException e){
-            System.out.println(e.getRawStatusCode() + " : " + e.getCause());
+            System.out.println(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
         }
     }
 
