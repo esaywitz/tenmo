@@ -34,9 +34,10 @@ public class UserController {
     }
 
     @RequestMapping(path = "/users/{id}/accounts", method = RequestMethod.PUT)
-    public void updateBalance(@PathVariable long id, @RequestBody @Valid BigDecimal amount){
-        accountDao.updateAccount(id, amount);
+    public void updateBalance(@PathVariable long id, @RequestParam BigDecimal balance){
+        accountDao.updateAccount(id, balance);
     }
+
     @RequestMapping (path = "/users", method= RequestMethod.GET)
     public List<User> findAll(){
         return userDao.findAll();

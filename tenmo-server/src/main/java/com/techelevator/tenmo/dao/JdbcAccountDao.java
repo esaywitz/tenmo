@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class JdbcAccountDao implements AccountDao{
     }
     @Override
     public Account getAccount(long id){
-        String sql = "select account_id, user_id from accounts where user_id=?;";
+        String sql = "select account_id, user_id from accounts where user_id= ?;";
         String sql2 = "select balance from accounts where user_id=?;";
         BigDecimal balance = jdbcTemplate.queryForObject(sql2, BigDecimal.class,id);
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
@@ -30,11 +31,11 @@ public class JdbcAccountDao implements AccountDao{
 
 
     @Override
-    public void updateAccount(long userId, BigDecimal amount){
+    public void updateAccount(long userId, BigDecimal balance){
         String sql = "update accounts "+
                      "set balance = balance + ? "+
                      "where user_id = ?;";
-        jdbcTemplate.update(sql, amount, userId);
+        jdbcTemplate.update(sql, balance, userId);
 
 
     }

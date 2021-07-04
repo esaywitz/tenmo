@@ -33,6 +33,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
     private AuthenticationService authenticationService;
     private AccountService accountService;
     private String theUsername;
+	NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     public static void main(String[] args) {
     	App app = new App(new ConsoleService(System.in, System.out), new AuthenticationService(API_BASE_URL), new AccountService());
@@ -83,7 +84,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		Long id = Long.valueOf(userId);
 		Account account = accountService.getAccount(id);
 		BigDecimal balance = account.getBalance();
-		NumberFormat formatter = NumberFormat.getCurrencyInstance();
+
 		String money = formatter.format(balance);
 		System.out.println("Your balance is: " + money);
 		return balance;
@@ -99,19 +100,24 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		//create a list of just transfer ids
 		List<Long> transferIds = new ArrayList<>();
 		for (Transfer transfer : transfers){
-			transferIds.add(transfer.getTransferID());
+			transferIds.add(transfer.getId());
 		}
 		if (transfers.length == 0){
 			System.out.println("There are no transfers available for this account.");
 		}
 		for (Transfer transfer: transfers){
-			System.out.println("Amount transferred:  " + transfer.getAmount() + "\nFrom account: "
+			System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
 					+ transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() +"\nTransaction Id: "
-					+ transfer.getTransferID());
+					+ transfer.getId());
 			System.out.println("_________________________________________");
 
 		}
-
+		int transactionID = console.getUserInputInteger("Enter the transaction id to view its full details");
+		if (!transferIds.contains(transactionID)){
+			System.out.println("You did not enter a valid id.");
+			mainMenu();
+		}
+		
 	}
 
 	//optional
@@ -132,9 +138,11 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 			userIds.add(user.getId());
 		}
 		System.out.println("List of users to send $$ to:");
-		for (User user : users){
-			System.out.println("Username: " + user.getUsername() + ", UserId: " + user.getId());
-			System.out.println("*************************************************************");
+		for (User user : users) {
+			if (!user.getUsername().equals(currentUser.getUser().getUsername())) {
+				System.out.println("Username: " + user.getUsername() + ", UserId: " + user.getId());
+				System.out.println("*************************************************************");
+			}
 		}
 
 		// select a user id to send TO. check first if valid.
@@ -152,17 +160,22 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		// check to see if current balance is enough to cover amount
 		// if not, ask them to add more money in their account or just tell them
 		// they can't complete their request at this time and return to main menu.
-		if (amountToSend.compareTo(viewCurrentBalance()) == 1){
-			System.out.println("You do not have enough funds to complete this transaction.");
-			mainMenu();
-		}
-
-
-		// POST request to create the transfer
 		int userId = currentUser.getUser().getId();
 		Long id = Long.valueOf(userId);
 		Account userAccount = accountService.getAccount(id);
 		Long accountId = userAccount.getAccountId();
+		if (amountToSend.compareTo(userAccount.getBalance()) == 1){
+			System.out.println("You do not have enough funds to complete this transaction.");
+			mainMenu();
+		}
+		//check if number is greater than 0.
+		if (numberEntered <= 0){
+			System.out.println("You did not enter a positive number.");
+			mainMenu();
+		}
+
+
+		// else POST request to create the transfer
 		Long recipientId = Long.valueOf(userIdToSendTo);
 		Account recipientAccount = accountService.getAccount(recipientId);
 		Long recipientAccountId = recipientAccount.getAccountId();
@@ -172,16 +185,17 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
 		// PUT method to update recipient account balance
 		accountService.updateBalance(recipientId, amountToSend);
-		System.out.println(recipientAccount.getBalance());
+		recipientAccount = accountService.getAccount(recipientId);
+		System.out.println(formatter.format(recipientAccount.getBalance()));
 
 		// PUT method to update from account balance
-
+		accountService.updateBalance(id, amountToSend.negate());
+		userAccount = accountService.getAccount(id);
+		System.out.println("Your balance is now: " + formatter.format(userAccount.getBalance()));
 		
 	}
 
-	private void viewTransactionDetails(Long transferID){
 
-	}
 
 
 	//optional

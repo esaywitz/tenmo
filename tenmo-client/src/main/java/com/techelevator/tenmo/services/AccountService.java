@@ -86,9 +86,9 @@ public class AccountService {
         return transferID;
     }
 
-    public void updateBalance(Long userId, BigDecimal amount){
+    public void updateBalance(Long userId, BigDecimal balance){
         try{
-            restTemplate.exchange(BASE_URL + "/users/" + userId + "/accounts?amount=" + amount, HttpMethod.PUT, makeBalanceEntity(amount), BigDecimal.class);
+            restTemplate.exchange(BASE_URL + "/users/" + userId + "/accounts?balance=" + balance, HttpMethod.PUT, makeBalanceEntity(balance), BigDecimal.class);
         }
         catch (RestClientResponseException e){
             System.out.println(e.getRawStatusCode() + " : " + e.getResponseBodyAsString());
