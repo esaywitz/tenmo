@@ -22,8 +22,8 @@ public class Transfer {
     //should we set status/type to the id or the description?
     //idea is to set the defaults and any changes can be handled in the
     //business logic
-    private int status = 2;
-    private int type = 2;
+    private String status;
+    private String type;
 
     public Transfer(){
 
@@ -60,11 +60,11 @@ public class Transfer {
         this.accountFrom = accountFrom;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -76,11 +76,11 @@ public class Transfer {
         this.transferID = transferID;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 

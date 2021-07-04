@@ -91,33 +91,45 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		int userId = currentUser.getUser().getId();
-		System.out.println("Your userid: " + userId);
-		Long id = Long.valueOf(userId);
-		Account account = accountService.getAccount(id);
-		Transfer[] transfers = accountService.getAll(account.getAccountId());
+        int userId = currentUser.getUser().getId();
+        System.out.println("Your userid: " + userId);
+        Long id = Long.valueOf(userId);
+        Account account = accountService.getAccount(id);
+        Transfer[] transfers = accountService.getAll(account.getAccountId());
 
-		//create a list of just transfer ids
-		List<Long> transferIds = new ArrayList<>();
-		for (Transfer transfer : transfers){
-			transferIds.add(transfer.getId());
-		}
-		if (transfers.length == 0){
-			System.out.println("There are no transfers available for this account.");
-		}
-		for (Transfer transfer: transfers){
-			System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
-					+ transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() +"\nTransaction Id: "
-					+ transfer.getId());
-			System.out.println("_________________________________________");
+        //create a list of just transfer ids
+        List<Long> transferIds = new ArrayList<>();
+        for (Transfer transfer : transfers) {
+            transferIds.add(transfer.getId());
+        }
+        if (transfers.length == 0) {
+            System.out.println("There are no transfers available for this account.");
+        }
+        for (Transfer transfer : transfers) {
+            System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
+                    + transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() + "\nTransaction Id: "
+                    + transfer.getId());
+            System.out.println("_________________________________________");
 
-		}
+        }
+
 		int transactionID = console.getUserInputInteger("Enter the transaction id to view its full details");
-		if (!transferIds.contains(transactionID)){
-			System.out.println("You did not enter a valid id.");
-			mainMenu();
-		}
-		
+//		if (!transferIds.contains(transactionID)){
+//			System.out.println("You did not enter a valid id.");
+//			mainMenu();
+//		}
+		Long transferId = Long.valueOf(transactionID);
+		Transfer transfer = accountService.getTransfer(id, transferId);
+
+        System.out.println("\nTransaction Id: " + transfer.getId() +
+                "\nAmount transferred:  " + formatter.format(transfer.getAmount()) +
+                "\nFrom account: " + transfer.getAccountFrom() +
+                "\nTo account: " + transfer.getAccountTo() +
+                "\nStatus: " + transfer.getStatus() +
+                "\nType: " + transfer.getType());
+        System.out.println("_________________________________________");
+
+
 	}
 
 	//optional
