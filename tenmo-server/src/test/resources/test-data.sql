@@ -1,6 +1,3 @@
--- First, remove all data from the database.
--- TRUNCATE is like DELETE, but only for removing all records from a table.
--- CASCADE means that records associated with foreign keys will also be removed rather than preventing deletion.
 TRUNCATE transfers, accounts, users CASCADE;
 
 
