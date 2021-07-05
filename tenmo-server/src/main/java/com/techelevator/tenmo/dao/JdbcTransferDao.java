@@ -36,9 +36,11 @@ public class JdbcTransferDao implements TransferDao{
             return allTransfers;
         }
 
-        String sql = "SELECT transfer_id, account_from, account_to, amount " +
+        String sql = "SELECT transfer_id, account_from, account_to, amount, transfer_type_desc, transfer_status_desc " +
                 "FROM transfers " +
-                "WHERE account_from = ? OR account_to=?;";
+                "JOIN transfer_statuses USING(transfer_status_id)\n" +
+                "JOIN transfer_types USING(transfer_type_id)\n" +
+                "WHERE account_from = ? OR account_to = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountID, accountID);
         while(results.next()){
             allTransfers.add(mapRowToTransfer(results));
@@ -64,13 +66,29 @@ public class JdbcTransferDao implements TransferDao{
         return transferID;
     }
 
+
+    public Transfer getTransfer(Long id){
+        Transfer transfer = null;
+        String sql = "SELECT transfer_id, account_from, account_to, amount, transfer_status_desc, transfer_type_desc\n" +
+                "FROM transfers\n" +
+                "JOIN transfer_statuses USING(transfer_status_id)\n" +
+                "JOIN transfer_types USING(transfer_type_id)\n" +
+                "WHERE transfer_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+        while(results.next()){
+            transfer = mapRowToTransfer(results);
+        }
+        return transfer;
+    }
+
+
     private Transfer mapRowToTransfer(SqlRowSet results) {
         Transfer transfer = new Transfer();
         transfer.setId(results.getLong("transfer_id"));
         //setting all transfer objects to default values of 3 for status (rejected)
         //and 2 for type (send). may need to be adjusted later.
-        transfer.setStatus(2);
-        transfer.setType(2);
+        transfer.setStatus(results.getString("transfer_status_desc"));
+        transfer.setType(results.getString("transfer_type_desc"));
         transfer.setAccountFrom(results.getInt("account_from"));
         transfer.setAccountTo(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));

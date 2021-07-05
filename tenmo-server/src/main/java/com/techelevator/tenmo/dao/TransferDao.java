@@ -11,5 +11,5 @@ public interface TransferDao {
 
     Long create(BigDecimal amount, Long userIDTo, Long userIDFrom);
 
-
+    Transfer getTransfer(Long id);
 }

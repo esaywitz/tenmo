@@ -39,6 +39,18 @@ public class AccountService {
         return transfers;
     }
 
+    public Transfer getTransfer(Long accountId, Long id){
+        Transfer transfer = null;
+        try{
+            transfer = restTemplate.exchange(BASE_URL + "/transfer?accountId=" + accountId + "&id=" + id, HttpMethod.GET, makeAuthEntity(),
+                    Transfer.class).getBody();
+        }
+        catch (RestClientResponseException e){
+            System.out.println(e.getRawStatusCode() + ": " + e.getResponseBodyAsString());
+        }
+        return transfer;
+    }
+
     public Account getAccount(Long userId){
         Account account = null;
         try {

@@ -67,8 +67,11 @@ public class UserController {
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)
     public Long create(@RequestBody @Valid Transfer transfer){
         return transferDao.create(transfer.getAmount(), transfer.getAccountTo(), transfer.getAccountFrom());
-    } 
+    }
 
-
-
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
+    public Transfer getTransfer(@RequestParam Long accountId, @RequestParam Long id){
+        return transferDao.getTransfer(id);
+    }
 }

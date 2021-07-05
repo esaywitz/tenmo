@@ -24,10 +24,10 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private static final String MAIN_MENU_OPTION_VIEW_BALANCE = "View your current balance";
 	private static final String MAIN_MENU_OPTION_SEND_BUCKS = "Send TE bucks";
 	private static final String MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS = "View your past transfers";
-	private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
-	private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
+	//private static final String MAIN_MENU_OPTION_REQUEST_BUCKS = "Request TE bucks";
+	//private static final String MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS = "View your pending requests";
 	private static final String MAIN_MENU_OPTION_LOGIN = "Login as different user";
-	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_REQUEST_BUCKS, MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
+	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_VIEW_BALANCE, MAIN_MENU_OPTION_SEND_BUCKS, MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS, MAIN_MENU_OPTION_LOGIN, MENU_OPTION_EXIT };
 	private static AuthenticatedUser currentUser;
 	private ConsoleService console;
     private AuthenticationService authenticationService;
@@ -63,13 +63,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 				viewCurrentBalance();
 			} else if(MAIN_MENU_OPTION_VIEW_PAST_TRANSFERS.equals(choice)) {
 				viewTransferHistory();
-			} else if(MAIN_MENU_OPTION_VIEW_PENDING_REQUESTS.equals(choice)) {
-				viewPendingRequests();
-			} else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
+			}  else if(MAIN_MENU_OPTION_SEND_BUCKS.equals(choice)) {
 				sendBucks();
-			} else if(MAIN_MENU_OPTION_REQUEST_BUCKS.equals(choice)) {
-				requestBucks();
-			} else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
+			}  else if(MAIN_MENU_OPTION_LOGIN.equals(choice)) {
 				login();
 			} else {
 				// the only other option on the main menu is to exit
@@ -91,33 +87,50 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
-		int userId = currentUser.getUser().getId();
-		System.out.println("Your userid: " + userId);
-		Long id = (long) userId;
-		Account account = accountService.getAccount(id);
-		Transfer[] transfers = accountService.getAll(account.getAccountId());
 
-		//create a list of just transfer ids
-		List<Long> transferIds = new ArrayList<>();
-		for (Transfer transfer : transfers){
-			transferIds.add(transfer.getId());
-		}
-		if (transfers.length == 0){
-			System.out.println("There are no transfers available for this account.");
-		}
-		for (Transfer transfer: transfers){
-			System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
-					+ transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() +"\nTransaction Id: "
-					+ transfer.getId());
-			System.out.println("_________________________________________");
+        int userId = currentUser.getUser().getId();
+        System.out.println("Your userid: " + userId);
+        Long id = Long.valueOf(userId);
+        Account account = accountService.getAccount(id);
+        Transfer[] transfers = accountService.getAll(account.getAccountId());
 
-		}
+        //create a list of just transfer ids
+        List<Integer> transferIds = new ArrayList<>();
+        for (Transfer transfer : transfers) {
+        	int transferId = transfer.getId().intValue();
+            transferIds.add(transferId);
+        }
+
+        if (transfers.length == 0) {
+            System.out.println("There are no transfers available for this account.");
+        }
+        for (Transfer transfer : transfers) {
+            System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
+                    + transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() + "\nTransaction Id: "
+                    + transfer.getId());
+            System.out.println("_________________________________________");
+
+        }
+
 		int transactionID = console.getUserInputInteger("Enter the transaction id to view its full details");
 		if (!transferIds.contains(transactionID)){
 			System.out.println("You did not enter a valid id.");
 			mainMenu();
 		}
-		
+
+		//get full results of one transfer
+		Long transferId = Long.valueOf(transactionID);
+		Transfer transfer = accountService.getTransfer(id, transferId);
+
+        System.out.println("\nTransaction Id: " + transfer.getId() +
+                "\nAmount transferred:  " + formatter.format(transfer.getAmount()) +
+                "\nFrom account: " + transfer.getAccountFrom() +
+                "\nTo account: " + transfer.getAccountTo() +
+                "\nStatus: " + transfer.getStatus() +
+                "\nType: " + transfer.getType());
+        System.out.println("_________________________________________");
+
+
 	}
 
 	//optional
@@ -186,7 +199,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		// PUT method to update recipient account balance
 		accountService.updateBalance(recipientId, amountToSend);
 		recipientAccount = accountService.getAccount(recipientId);
-		System.out.println(formatter.format(recipientAccount.getBalance()));
+
 
 		// PUT method to update from account balance
 		accountService.updateBalance(id, amountToSend.negate());
