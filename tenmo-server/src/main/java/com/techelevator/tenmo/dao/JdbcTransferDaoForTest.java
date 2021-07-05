@@ -14,6 +14,19 @@ public class JdbcTransferDaoForTest implements TransferDao{
 
     private JdbcTemplate jdbcTemplate;
 
+    public Transfer getTransfer(Long id){
+        Transfer transfer = null;
+        String sql = "SELECT transfer_id, account_from, account_to, amount, transfer_status_desc, transfer_type_desc\n" +
+                "FROM transfers\n" +
+                "JOIN transfer_statuses USING(transfer_status_id)\n" +
+                "JOIN transfer_types USING(transfer_type_id)\n" +
+                "WHERE transfer_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+        while(results.next()){
+            transfer = mapRowToTransfer(results);
+        }
+        return transfer;
+    }
 
 
     public JdbcTransferDaoForTest(DataSource dataSource){
@@ -66,8 +79,6 @@ public class JdbcTransferDaoForTest implements TransferDao{
         transfer.setId(results.getLong("transfer_id"));
         //setting all transfer objects to default values of 3 for status (rejected)
         //and 2 for type (send). may need to be adjusted later.
-        transfer.setStatus(2);
-        transfer.setType(2);
         transfer.setAccountFrom(results.getInt("account_from"));
         transfer.setAccountTo(results.getInt("account_to"));
         transfer.setAmount(results.getBigDecimal("amount"));

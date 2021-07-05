@@ -24,7 +24,6 @@ public class AccountService {
 
     public AccountService(){
         restTemplate = new RestTemplate();
-
     }
 
     public Transfer[] getAll(Long accountId){
