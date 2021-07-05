@@ -32,7 +32,6 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private ConsoleService console;
     private AuthenticationService authenticationService;
     private AccountService accountService;
-    private String theUsername;
 	NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
     public static void main(String[] args) {
