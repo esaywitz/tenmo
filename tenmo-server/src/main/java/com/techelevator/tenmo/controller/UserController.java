@@ -27,40 +27,41 @@ public class UserController {
         this.transferDao = transferDao;
 
     }
-
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/users/{id}/accounts" , method = RequestMethod.GET)
-    public Account getBalance(@PathVariable long id){
+    public Account getAccount(@PathVariable long id){
         return accountDao.getAccount(id);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @RequestMapping(path = "/users/{id}/accounts", method = RequestMethod.PUT)
     public void updateBalance(@PathVariable long id, @RequestParam BigDecimal balance){
         accountDao.updateAccount(id, balance);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping (path = "/users", method= RequestMethod.GET)
     public List<User> findAll(){
         return userDao.findAll();
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/users/{username}", method = RequestMethod.GET)
     public User findByUsername(@PathVariable @Valid String username){
        return userDao.findByUsername(username);
     }
-    
 
+    @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/users", method = RequestMethod.POST)
     public boolean create(@RequestBody @Valid User user){
         return userDao.create(user.getUsername(), user.getPassword());
     }
-
 
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers(@RequestParam @Valid Long accountId){
         return transferDao.getAll(accountId);
     }
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)

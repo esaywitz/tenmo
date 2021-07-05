@@ -93,7 +93,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	private void viewTransferHistory() {
 		int userId = currentUser.getUser().getId();
 		System.out.println("Your userid: " + userId);
-		Long id = Long.valueOf(userId);
+		Long id = (long) userId;
 		Account account = accountService.getAccount(id);
 		Transfer[] transfers = accountService.getAll(account.getAccountId());
 
@@ -161,7 +161,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		// if not, ask them to add more money in their account or just tell them
 		// they can't complete their request at this time and return to main menu.
 		int userId = currentUser.getUser().getId();
-		Long id = Long.valueOf(userId);
+		Long id = (long) userId;
 		Account userAccount = accountService.getAccount(id);
 		Long accountId = userAccount.getAccountId();
 		if (amountToSend.compareTo(userAccount.getBalance()) == 1){
