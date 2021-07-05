@@ -35,6 +35,14 @@ public class Transfer {
         this.accountTo = accountTo;
         this.accountFrom = accountFrom;
     }
+    public Transfer(Long transferID,BigDecimal amount, int accountTo, int accountFrom){
+        this.amount = amount;
+        this.accountTo = accountTo;
+        this.accountFrom = accountFrom;
+        this.transferID=transferID;
+    }
+
+
 
     public BigDecimal getAmount() {
         return amount;

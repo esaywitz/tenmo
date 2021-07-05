@@ -27,14 +27,21 @@ public class UserController {
         this.transferDao = transferDao;
 
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6aa5ee6c2358e0baf8206064bb84aadd8f7afbd6
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/users/{id}/accounts" , method = RequestMethod.GET)
-    public Account getBalance(@PathVariable long id){
+    public Account getAccount(@PathVariable long id){
         return accountDao.getAccount(id);
     }
 
+<<<<<<< HEAD
     @ResponseStatus(HttpStatus.CREATED)
+=======
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+>>>>>>> 6aa5ee6c2358e0baf8206064bb84aadd8f7afbd6
     @RequestMapping(path = "/users/{id}/accounts", method = RequestMethod.PUT)
     public void updateBalance(@PathVariable long id, @RequestParam BigDecimal balance){
         accountDao.updateAccount(id, balance);
@@ -52,20 +59,21 @@ public class UserController {
        return userDao.findByUsername(username);
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6aa5ee6c2358e0baf8206064bb84aadd8f7afbd6
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/users", method = RequestMethod.POST)
     public boolean create(@RequestBody @Valid User user){
         return userDao.create(user.getUsername(), user.getPassword());
     }
 
-
     @ResponseStatus(HttpStatus.OK)
     @RequestMapping(path = "/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers(@RequestParam @Valid Long accountId){
         return transferDao.getAll(accountId);
     }
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @RequestMapping(path = "/transfers", method = RequestMethod.POST)

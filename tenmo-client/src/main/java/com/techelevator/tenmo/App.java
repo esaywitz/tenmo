@@ -91,6 +91,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 	}
 
 	private void viewTransferHistory() {
+<<<<<<< HEAD
         int userId = currentUser.getUser().getId();
         System.out.println("Your userid: " + userId);
         Long id = Long.valueOf(userId);
@@ -110,6 +111,13 @@ private static final String API_BASE_URL = "http://localhost:8080/";
                     + transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() + "\nTransaction Id: "
                     + transfer.getId());
             System.out.println("_________________________________________");
+=======
+		int userId = currentUser.getUser().getId();
+		System.out.println("Your userid: " + userId);
+		Long id = (long) userId;
+		Account account = accountService.getAccount(id);
+		Transfer[] transfers = accountService.getAll(account.getAccountId());
+>>>>>>> 6aa5ee6c2358e0baf8206064bb84aadd8f7afbd6
 
         }
 
@@ -173,7 +181,7 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 		// if not, ask them to add more money in their account or just tell them
 		// they can't complete their request at this time and return to main menu.
 		int userId = currentUser.getUser().getId();
-		Long id = Long.valueOf(userId);
+		Long id = (long) userId;
 		Account userAccount = accountService.getAccount(id);
 		Long accountId = userAccount.getAccountId();
 		if (amountToSend.compareTo(userAccount.getBalance()) == 1){
