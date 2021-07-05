@@ -9,7 +9,7 @@ public interface TransferDao {
 
     List<Transfer> getAll(Long userId);
 
-    boolean create(BigDecimal amount, Long userIDTo, Long userIDFrom);
+    Long create(BigDecimal amount, Long userIDTo, Long userIDFrom);
 
 
 }

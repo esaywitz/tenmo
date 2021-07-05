@@ -4,24 +4,21 @@ import com.techelevator.tenmo.model.Transfer;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.LongBinaryOperator;
 
-@Component
-public class JdbcTransferDao implements TransferDao{
+public class JdbcTransferDaoForTest implements TransferDao{
 
     private JdbcTemplate jdbcTemplate;
 
 
 
-    public JdbcTransferDao(JdbcTemplate jdbcTemplate){
+    public JdbcTransferDaoForTest(DataSource dataSource){
 
-        this.jdbcTemplate=jdbcTemplate;
+        jdbcTemplate=new JdbcTemplate(dataSource);
     }
 
 
@@ -51,12 +48,12 @@ public class JdbcTransferDao implements TransferDao{
     public Long create(BigDecimal amount, Long userIDTo, Long userIDFrom){
         Long transferID = null;
 
-        String sql = "INSERT INTO transfers (amount, account_to, account_from, transfer_type_id, transfer_status_id) " +
-                "VALUES (?,?,?,?,?) RETURNING transfer_id; ";
+        String sql = "INSERT INTO transfers (transfer_id, amount, account_to, account_from, transfer_type_id, transfer_status_id) " +
+                "VALUES (?,?,?,?,?,?) RETURNING transfer_id; ";
 
         try {
-            int transferId = jdbcTemplate.queryForObject(sql, Integer.class, amount, userIDTo, userIDFrom, 2, 2);
-            transferID = Long.valueOf(transferId);
+            int transferId = jdbcTemplate.queryForObject(sql, Integer.class, 1004,amount, userIDTo, userIDFrom, 2, 2);
+            transferID = (long) transferId;
         }
         catch (DataAccessException e){
             System.out.println(e.getCause() + ": " + e.getLocalizedMessage());

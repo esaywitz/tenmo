@@ -6,25 +6,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class JdbcUserDao implements UserDao {
+public class JdbcUserDaoForTest implements UserDao {
 
     private static final BigDecimal STARTING_BALANCE = new BigDecimal("1000.00");
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
 
 
 
-  public JdbcUserDao(JdbcTemplate jdbcTemplate){
-      this.jdbcTemplate=jdbcTemplate;
-  }
+    public JdbcUserDaoForTest(DataSource dataSource){
+        jdbcTemplate= new JdbcTemplate(dataSource);
+    }
 
     @Override
     public int findIdByUsername(String username) {
@@ -34,7 +32,7 @@ public class JdbcUserDao implements UserDao {
             return id;
         } else {
             return -1;
-    }
+        }
     }
 
     @Override
@@ -55,7 +53,7 @@ public class JdbcUserDao implements UserDao {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(sql, username);
         if (rowSet.next()){
             return mapRowToUser(rowSet);
-            }
+        }
         throw new UsernameNotFoundException("User " + username + " was not found.");
     }
 
@@ -70,7 +68,7 @@ public class JdbcUserDao implements UserDao {
             newUserId = jdbcTemplate.queryForObject(sql, Integer.class, username, password_hash);
         } catch (DataAccessException e) {
             return false;
-                }
+        }
 
         // create account
         sql = "INSERT INTO accounts (user_id, balance) values(?, ?)";
@@ -92,4 +90,5 @@ public class JdbcUserDao implements UserDao {
         user.setAuthorities("USER");
         return user;
     }
+
 }
