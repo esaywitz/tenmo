@@ -102,7 +102,9 @@ private static final String API_BASE_URL = "http://localhost:8080/";
 
         if (transfers.length == 0) {
             System.out.println("There are no transfers available for this account.");
+            mainMenu();
         }
+
         for (Transfer transfer : transfers) {
             System.out.println("Amount transferred:  " + formatter.format(transfer.getAmount()) + "\nFrom account: "
                     + transfer.getAccountFrom() + "\nTo account: " + transfer.getAccountTo() + "\nTransaction Id: "
